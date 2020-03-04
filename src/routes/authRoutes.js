@@ -65,8 +65,8 @@ let router = function(){
 				var smtpTransport = await nodemailer.createTransport({
 			        service: "Gmail",
 			        auth: {
-			            user: "malviyankaushalesh@gmail.com",
-			            pass: "trick@122"
+			            user: "kaushalesh.diary@gmail.com",
+			            pass: "diary@44"
 			        }
 			    });
 
