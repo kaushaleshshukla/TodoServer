@@ -1,0 +1,33 @@
+<html>
+	<head> </head>
+	<body>
+        <div>
+            <h3> Hey, <%=user.Name%>! Welcome to ToDo</h3>
+            <div>
+                All List
+                <%for(var i=0; i<user.lists.length; i++){%>
+                    <h5><%=user.lists[i].Name%>  <%=user.lists[i].isCurrent%></h5>
+                <%}%>
+            </div>
+            <div>
+                All Task
+                <%for(var i=0; i<user.tasks.length; i++){%>
+                    <h5> <%=user.tasks[i].Name%>  <%=user.tasks[i].dueDate%> <%=user.tasks[i].totalSubTask%> <%=user.tasks[i].completedSubTask%> </h5>
+                <%}%>
+            </div>
+        </div>
+		<div>
+			Addlist
+			<form name="Addlist" action="/update/addList" method="post">
+				<input name="newListName" id="newListName">
+				<input type="submit" value="addList">
+			</form>
+			AddTask
+			<form name="AddTask" action="/update/addTask" method="post">
+				<input name="listId" id="listId">
+				<input name="newTaskName" id="newTaskName">
+				<input type="submit" value="AddTask">
+			</form>
+		</div>
+	</body>
+</html>
