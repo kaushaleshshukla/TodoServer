@@ -99,11 +99,12 @@ let router = function() {
 			})();
 		});
 
-	updateRouter.route('/addSubTask')
+	updateRouter.route('/addSubtask')
 		.post( (req, res) =>{
-			// requirements -> taskId, newSubTaskName
+			// requirements -> listId, taskId, newSubTaskName
 			(async function(){
 
+				//pending -> check task in listId and authenticate user
 				// establising connection to database
 				let connection = await MongoClient.connect(url);
 				let db = connection.db(dbName);
@@ -131,6 +132,7 @@ let router = function() {
 
 			(async function(){
 
+				//pending - user authentication
 				// establising connection to database
 			
 				let connection = await MongoClient.connect(url);
@@ -179,7 +181,7 @@ let router = function() {
 
 	updateRouter.route('/udpateSubTask')
 		.post( (req, res) =>{
-			// requirements -> for searching => taskid, subtaskName
+			// requirements -> for searching => listId, taskid, subtaskName
 			// 				   new date => newSubtaskName, subtaskCompletedStatus
 
 			(async function(){

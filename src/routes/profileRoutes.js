@@ -108,25 +108,34 @@ let router = function(){
 
 	profileRouter.route('/:id')
 		.get( (req, res)=>{
-			let url = 'mongodb://localhost:27017';
 			(async function(){
-				let connection = await MongoClient.connect(url);
-				let db = connection.db('ToDo');
 
-				//getting todo table
-				let todoTable = db.collection('todos');
+				let connection = await MongoClient.connect(url);
+				let db = connection.db(dbName);
+
+				//getting userList table
+				let userTable = db.collection(userTableName);
 
 				//getting task list of user requested ToDo
-				let taskList = await todoTable.findOne({"_id" : new ObjectId(req.params.id)});
+				let userlist = await userTable.findOne({"username" : req.user.username});
 
 
 				//checking validity of user
 				let validUser =false;
 
-				for(let i=0; i<taskList.usernames.length; i++){
-					if(taskList.usernames[i]==req.user.username){
+				for(let i=0; i<userlist.personalListIds.length; i++){
+					if(userlist.personalListIds[i]==id){
 						validUser = true;
 						break;
+					}
+				}
+
+				if(!validUser){
+					for(let i=0; i<userlist.sharedListIds.length; i++){
+						if(userlist.sharedListIds[i]==id){
+							validUser = true;
+							break;
+						}
 					}
 				}
 
@@ -141,18 +150,12 @@ let router = function(){
 					}
 
 					//getting all task of a ToDo
-					for(let i=0; i<taskList.tasks.length; i++){
-						task = {
-							Name : taskList.tasks[i].Name,
-							dueDate : taskList.tasks[i].dueDate,
-							totalSubTask : taskList.tasks[i].totalSubTask,
-							completedSubTask : taskList.tasks[i].completedSubTask
-						}
-						result.tasks.push(task);
-					}
+					let todoTable = db.collection(listTableName);
+					let todoList = await todoTable.findOne({"_id" : new ObjectId(req.params.id)});
+					result.tasks = todoList.listOfTask;
 
-					let userTable = db.collection('usersList');
-					await userTable.updateOne({username: req.user.username}, {$set : { lastEdited : req.params.id}}); 
+					let userTable = db.collection(userTableName);
+					await userTable.updateOne({username: req.user.username}, {$set : { lastAccessedListId : req.params.id}}); 
 					await connection.close();
 
 					res.send(result);
@@ -165,26 +168,42 @@ let router = function(){
 				}
 			})();
 		});
-	profileRouter.route('/:id/:subTask')
+	profileRouter.route('/:id/:taskId')
 		.get((req, res) =>{
-			let url = 'mongodb://localhost:27017';
 			(async function(){
-				let connection = await MongoClient.connect(url);
-				let db = connection.db('ToDo');
 
-				//getting todo table
-				let todoTable = db.collection('todos');
+				let connection = await MongoClient.connect(url);
+				let db = connection.db(dbName);
+
+				//getting userList table
+				let userTable = db.collection(userTableName);
 
 				//getting task list of user requested ToDo
-				let taskList = await todoTable.findOne({"_id" : new ObjectId(req.params.id)});
+				let userlist = await userTable.findOne({"username" : req.user.username});
 
-				let validUser = false;
 
-				for(let i=0; i<taskList.usernames.length; i++){
-					if(taskList.usernames[i]==req.user.username){
+				//checking validity of user
+				let validUser =false;
+
+				for(let i=0; i<userlist.personalListIds.length; i++){
+					if(userlist.personalListIds[i]==id){
 						validUser = true;
 						break;
 					}
+				}
+
+				if(!validUser){
+					for(let i=0; i<userlist.sharedListIds.length; i++){
+						if(userlist.sharedListIds[i]==id){
+							validUser = true;
+							break;
+						}
+					}
+				}
+
+				if(!validUser){
+					await connection.close();
+					res.send("Unauthorize access");
 				}
 
 				if(!validUser){
@@ -194,26 +213,16 @@ let router = function(){
 
 				else{
 					result = {
-						subTasks : [],
-						notes : ""
+						subtasks : []
 					}
 
-					for(let i=0; i<taskList.tasks.length; i++){
-						if(taskList.tasks[i].taskName==req.params.subTask){
-							result.subTasks = taskList.tasks[i].subTasks,
-							result.notes = taskList.tasks[i].notes;
-							break;
-						}
-					}
+					let taskTable = db.connection(taskTableName);
+					let subtaskList = await taskTable.findOne({"_id" : new ObjectId(req.params.taskId)});
+					result.subtasks = subtaskList.listOfSubtask;
 
 					await connection.close();
 					res.send(result);
-					// res.render(
-					// 	'subtasks',
-					// 	{	
-					// 		result
-					// 	}
-					// )
+					
 				}
 			})();
 		});
