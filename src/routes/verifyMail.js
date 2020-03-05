@@ -21,11 +21,9 @@ const func = function(){
 					let authTable = await db.collection('auths');
 					let userList = {
 						username : result.username,
-						list : [],
-						currentDay : [],
-						plannedTask : [],
-						importantTask : [],
-						lastEdited : ""
+						personalListIds : [],
+						sharedListIds : [],
+						lastAccessedListId : ""
 					};
 					//Creating a list for user
 					await userTable.insert(userList);

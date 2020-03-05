@@ -8,7 +8,7 @@ let ObjectId = require('mongodb').ObjectID;
 let url = 'mongodb://localhost:27017';
 let taskTableName = 'task';
 let listTableName = 'list';
-let userTableName = 'userList';
+let userTableName = 'usersList';
 let authTableName = 'auths';
 let dbName = 'ToDo';
 
@@ -41,7 +41,7 @@ let router = function() {
 
 				todo = {
 					name : req.body.newListName,
-					tasks : [],
+					listOfTask : [],
 				}
 
 				let result = await todoTable.insertOne(todo);
@@ -113,7 +113,7 @@ let router = function() {
 				let taskTable = db.collection(taskTableName);
 
 				subtask = {
-					Name : req.body.newSubTaskName,
+					name : req.body.subtaskName,
 					completed : false
 				}
 

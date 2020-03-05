@@ -2,17 +2,18 @@
 	<head> </head>
 	<body>
         <div>
-            <h3> Hey, <%=user.Name%>! Welcome to ToDo</h3>
+            <h3> Hey, <%=user.name%>! Welcome to ToDo</h3>
             <div>
                 All List
                 <%for(var i=0; i<user.lists.length; i++){%>
-                    <h5><%=user.lists[i].Name%>  <%=user.lists[i].isCurrent%></h5>
+                    <h5><%=user.lists[i].name%>  <%=user.lists[i].isCurrent%></h5>
                 <%}%>
             </div>
             <div>
                 All Task
                 <%for(var i=0; i<user.tasks.length; i++){%>
-                    <h5> <%=user.tasks[i].Name%>  <%=user.tasks[i].dueDate%> <%=user.tasks[i].totalSubTask%> <%=user.tasks[i].completedSubTask%> </h5>
+					<h5> <%=user.tasks[i].name%>  <%=user.tasks[i].id%> <%=user.tasks[i].name%> <%=user.tasks[i].completed%> <%=user.tasks[i].important%>
+						<%=user.tasks[i].notes%> <%=user.tasks[i].dueDate%> </h5>
                 <%}%>
             </div>
         </div>
@@ -27,6 +28,13 @@
 				<input name="listId" id="listId">
 				<input name="newTaskName" id="newTaskName">
 				<input type="submit" value="AddTask">
+			</form>
+			Add subtask
+			<form name="AddSubtask" action="/update/addSubtask" method="post">
+				<input name="listId" id="listId">
+				<input name="taskId" id="taskId">
+				<input name="subtaskName">
+				<input type="submit" value="Add subtask">
 			</form>
 		</div>
 	</body>

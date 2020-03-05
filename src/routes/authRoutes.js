@@ -16,21 +16,21 @@ let router = function(){
 				let connection = await MongoClient.connect(url);
 
 				//getting database
-				let db = await connection.db('ToDo');
+				let db = connection.db('ToDo');
 
 				//getting auth collection 
-				let authTable = await db.collection('auths');
+				let authTable = db.collection('auths');
 
 				//creating user
 				let user = {
-					Name: req.body.Name,
-					username: req.body.userName,
+					name: req.body.name,
+					username: req.body.username,
 					password: req.body.password,
 					active: false
 				};
 
 				//checking availability of username
-				let userSearch = await authTable.findOne({username: req.body.userName });
+				let userSearch = await authTable.findOne({username: req.body.username });
 				console.log(userSearch);
 				
 				if(userSearch){
@@ -45,8 +45,8 @@ let router = function(){
 				if(authInsertRes && authInsertRes.insertedCount){
 					console.log("redirecting to send mail");
 					connection.close();
-					res.redirect(`/auth/sendMail?user=${req.body.userName}`);
-				}; 
+					res.redirect(`/auth/sendMail?user=${req.body.username}`);
+				};
 		})();
 	});
 
@@ -59,6 +59,7 @@ let router = function(){
 
 	//sending mail for verification of username
 	authRouter.route('/sendMail')
+		//pending -> authenticate this route
 		.get((req, res) =>{
 			(async function() {
 
@@ -80,7 +81,7 @@ let router = function(){
 			        subject: "Please confirm your Email account",
 			        html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" 
 			    }
-			    await smtpTransport.sendMail(mailOptions, function(error, response){
+			    smtpTransport.sendMail(mailOptions, function(error, response){
 			        if(error){
 			            console.log(error);
 			            res.send('Invalid Mail');

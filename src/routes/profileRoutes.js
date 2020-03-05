@@ -8,7 +8,7 @@ let ObjectId = require('mongodb').ObjectID;
 let url = 'mongodb://localhost:27017';
 let taskTableName = 'task';
 let listTableName = 'list';
-let userTableName = 'userList';
+let userTableName = 'usersList';
 let authTableName = 'auths';
 let dbName = 'ToDo';
 
@@ -20,7 +20,7 @@ let router = function(){
 		}
 		else
 			next();
-	});
+	});	
 
 	profileRouter.route('/')
 		.get((req, res) =>{
@@ -74,7 +74,7 @@ let router = function(){
 							id : todoList.personalListIds[i],
 							isCurrent : false
 						}
-						if(todoList.personalListIds[i] == lastEdited){
+						if(todoList.personalListIds[i] == lastAccessedId){
 							list.isCurrent = true;
 						}
 						user.lists.push(list);
@@ -93,7 +93,9 @@ let router = function(){
 						user.lists.push(list);
 					}
 
-					user.tasks = taskList.listOfTask;
+					for(let i=0; i<taskList.listOfTask.length; i++)
+						user.tasks.push(taskList.listOfTask[i]);
+					
 
 					await connection.close();
 					res.render(
@@ -107,6 +109,8 @@ let router = function(){
 		});
 
 	profileRouter.route('/:id')
+
+	// pending -> check validity of id using try catch block
 		.get( (req, res)=>{
 			(async function(){
 
@@ -124,7 +128,7 @@ let router = function(){
 				let validUser =false;
 
 				for(let i=0; i<userlist.personalListIds.length; i++){
-					if(userlist.personalListIds[i]==id){
+					if(userlist.personalListIds[i]==req.params.id){
 						validUser = true;
 						break;
 					}
@@ -132,7 +136,7 @@ let router = function(){
 
 				if(!validUser){
 					for(let i=0; i<userlist.sharedListIds.length; i++){
-						if(userlist.sharedListIds[i]==id){
+						if(userlist.sharedListIds[i]==req.params.id){
 							validUser = true;
 							break;
 						}
@@ -169,6 +173,7 @@ let router = function(){
 			})();
 		});
 	profileRouter.route('/:id/:taskId')
+	// pending : check validity of id and taskId  using try catch block
 		.get((req, res) =>{
 			(async function(){
 
@@ -186,7 +191,7 @@ let router = function(){
 				let validUser =false;
 
 				for(let i=0; i<userlist.personalListIds.length; i++){
-					if(userlist.personalListIds[i]==id){
+					if(userlist.personalListIds[i]==req.params.id){
 						validUser = true;
 						break;
 					}
@@ -194,7 +199,7 @@ let router = function(){
 
 				if(!validUser){
 					for(let i=0; i<userlist.sharedListIds.length; i++){
-						if(userlist.sharedListIds[i]==id){
+						if(userlist.sharedListIds[i]==req.params.id){
 							validUser = true;
 							break;
 						}
@@ -206,17 +211,12 @@ let router = function(){
 					res.send("Unauthorize access");
 				}
 
-				if(!validUser){
-					await connection.close();
-					res.send('Unauthorize access');
-				}
-
 				else{
 					result = {
 						subtasks : []
 					}
 
-					let taskTable = db.connection(taskTableName);
+					let taskTable = db.collection(taskTableName);
 					let subtaskList = await taskTable.findOne({"_id" : new ObjectId(req.params.taskId)});
 					result.subtasks = subtaskList.listOfSubtask;
 
