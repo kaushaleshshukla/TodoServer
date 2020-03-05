@@ -1,0 +1,94 @@
+
+const authRouter = require('./src/routes/authRoutes')();
+const varifyRouter = require('./src/routes/verifyMail')();
+const profileRouter = require('./src/routes/profileRoutes')();
+const updateRouter = require('./src/routes/updateRoutes')();
+const deleteRouter = require('./src/routes/deleteRoutes')();
+
+
+
+-------------------------------------------------------authRoutes--------------------------------------------------------
+hostnam/authRoutes/signUp
+    method post 
+        request -> name, username, password
+        response -> if(username is valid):
+                        "Verify Your mail 
+                    else
+                        "Invalid Mail"
+    
+hostnam/authRoutes/signIn
+    method post
+        request -> username, password
+        response -> if(username is valid)
+                        redirect to profile
+                    else
+                        "Invalid Input"
+
+
+-------------------------------------------------------profileRoutes-------------------------------------------------------
+/profile
+    for all routes 
+        if(user cookie is not valid)
+            "You are not logged In"
+
+    method get
+        request -> user cookie
+        response -> user = {
+					name : userInfo.name,
+					username : req.user.username,
+					lists : [],
+					tasks : []
+				}
+    
+/profile/listId
+    method get
+        request -> user cookie
+        response -> if(list does not belong user)
+                        "Unauthorize access"
+                    else
+                        result = {
+					    	tasks : []
+					    }
+
+/profile/listId/taskId
+    method get
+        request -> user cookie
+        response -> if(list does not belong user)
+                        "Unauthorize access"
+                    else
+                        result = {
+						    subtasks : []
+					    }    
+
+---------------------------------------------------------updateRoutes------------------------------------------------------------------
+
+/update
+    for all routes 
+        if(user cookie is not valid)
+            "You are not logged In"
+
+/update/addList
+    method post
+        request -> newListName
+        response ->"new List Added"
+
+
+/update/addTask
+    method post 
+        request -> listId, newTaskName
+        response -> if(list does not belong user)
+                        "Unauthorize access"
+                    else
+                        "New task added"
+                    
+/update/addSubtask
+    method post
+        request -> listId, taskId, newSubTaskName
+        response -> if(list does not belong user)
+                        "Unauthorize access"
+                    else if(task does not belong to list)
+                        "Unknown request"
+                    else 
+                        "New Subtask Added"
+
+

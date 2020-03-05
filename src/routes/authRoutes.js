@@ -52,7 +52,7 @@ let router = function(){
 
 	authRouter.route('/signIn')
 		.post(passport.authenticate('local', {
-			failureRedirect: '/' 
+			res.send("Invalid Input"); 
 		}), function(req, res) {
 			res.redirect('/profile');
 		});

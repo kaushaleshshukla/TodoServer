@@ -52,12 +52,7 @@ let router = function(){
 				if(!lastAccessedId){
 					await connection.close();
 					console.log('New User');
-					res.render(
-					'profile',
-						{
-							user 
-						}
-					);
+					res.send(user);
 				}
 				else{
 
@@ -98,12 +93,7 @@ let router = function(){
 					
 
 					await connection.close();
-					res.render(
-						'profile',
-							{
-								user
-							}
-					)
+					res.send(user);
 				}
 			})();
 		});
@@ -152,7 +142,6 @@ let router = function(){
 					result = {
 						tasks : []
 					}
-
 					//getting all task of a ToDo
 					let todoTable = db.collection(listTableName);
 					let todoList = await todoTable.findOne({"_id" : new ObjectId(req.params.id)});
