@@ -37,7 +37,7 @@ let router = function(){
 					console.log("Username Already Present");
 					res.statusCode = 400;
 					res.statusMessage = "Username Already Present";
-					res.redirect('/');
+					res.send('Sign Up failed');
 					return;
 				}
 
@@ -58,7 +58,7 @@ let router = function(){
 		}), function(req, res) {
 			res.statusCode = 200;
 			res.statusMessage = "Login Successful";
-			res.redirect('/profile');
+			res.send('redirect to /profile');
 		});
 
 	//sending mail for verification of username
@@ -90,7 +90,7 @@ let router = function(){
 						console.log(error);
 						res.statusCode = 400;
 						res.statusMessage = "Invalid Mail";
-			            res.redirect('/');
+			            res.send('Sign Up failed');
 			        }else{
 
 			        	// adding user in inactive user table
@@ -108,7 +108,7 @@ let router = function(){
 
 								res.statusCode = 201;
 								res.statusMessage = "Varification mail sent";
-								res.send('Varify your mail');
+								res.send('Sign Up successful Varify your mail');
 							});
 						});
 			        }

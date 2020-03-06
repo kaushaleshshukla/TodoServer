@@ -6,10 +6,10 @@ hostname/auth/signUp
         request -> name, username, password
 
         response -> if(username already used)
-                        redirect('/')
+                        "Sign Up failed"
 
                     else if(username is not valid):
-                        redirect('/')
+                        "Sign Up failed"
 
                     else
                         "Verify Your mail" 
@@ -38,7 +38,7 @@ hostname/auth/signIn
         request -> username, password
 
         response -> if(user is valid)
-                        redirect('/profile')
+                        "redirect to /profile"
                     else
                         redirect('/')
         

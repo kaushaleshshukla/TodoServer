@@ -68,6 +68,7 @@ let router = function(){
 
 					for(let i=0; i<todoList.personalListIds.length; i++){
 						let result = await todoTable.findOne({ "_id" : new ObjectId(todoList.personalListIds[i])});
+						console.log(todoList.personalListIds[i]+" "+result);
 						list = {
 							name : result.name,
 							id : todoList.personalListIds[i],
