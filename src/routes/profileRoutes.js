@@ -16,6 +16,8 @@ let dbName = 'ToDo';
 let router = function(){
 	profileRouter.use((req, res, next) => {
 		if(!req.user){
+			res.statusCode = 401;
+			res.statusMessage = "Unauthorize message";
 			res.send('You are not logged in :(');
 		}
 		else
@@ -52,6 +54,8 @@ let router = function(){
 				if(!lastAccessedId){
 					await connection.close();
 					console.log('New User');
+					res.statusCode = 200;
+					res.statusMessage = "New user";
 					res.send(user);
 				}
 				else{
@@ -93,6 +97,9 @@ let router = function(){
 					
 
 					await connection.close();
+
+					res.statusCode = 200;
+					res.statusMessage = "Old user";
 					res.send(user);
 				}
 			})();
@@ -132,16 +139,19 @@ let router = function(){
 						}
 					}
 				}
+				
+				result = {
+					tasks : []
+				}
 
 				if(!validUser){
 					await connection.close();
-					res.send("Unauthorize access");
+					res.statusCode = 401;
+					res.statusMessage = "Unauthorize access";
+					res.send(result);
 				}
 
 				else{
-					result = {
-						tasks : []
-					}
 					//getting all task of a ToDo
 					let todoTable = db.collection(listTableName);
 					let todoList = await todoTable.findOne({"_id" : new ObjectId(req.params.id)});
@@ -151,13 +161,10 @@ let router = function(){
 					await userTable.updateOne({username: req.user.username}, {$set : { lastAccessedListId : req.params.id}}); 
 					await connection.close();
 
+					res.statusCode = 200;
+					res.statusMessage = "response sent";
 					res.send(result);
-					// res.render(
-					// 	'taskList',
-					// 	{
-					// 		result
-					// 	}
-					// )
+					
 				}
 			})();
 		});
@@ -194,24 +201,28 @@ let router = function(){
 						}
 					}
 				}
+				
+				result = {
+					subtasks : []
+				}
 
 				if(!validUser){
 					await connection.close();
-					res.send("Unauthorize access");
+					res.statusCode = 401;
+					res.statusMessage = "Unauthorize access";
+					res.send(result);
 				}
 
 				else{
-					result = {
-						subtasks : []
-					}
 
 					let taskTable = db.collection(taskTableName);
 					let subtaskList = await taskTable.findOne({"_id" : new ObjectId(req.params.taskId)});
 					result.subtasks = subtaskList.listOfSubtask;
 
 					await connection.close();
+					res.statusCode = 200;
+					res.statusMessage = "response sent";
 					res.send(result);
-					
 				}
 			})();
 		});

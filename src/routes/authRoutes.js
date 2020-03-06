@@ -35,6 +35,8 @@ let router = function(){
 				
 				if(userSearch){
 					console.log("Username Already Present");
+					res.statusCode = 400;
+					res.statusMessage = "Username Already Present";
 					res.redirect('/');
 					return;
 				}
@@ -52,8 +54,10 @@ let router = function(){
 
 	authRouter.route('/signIn')
 		.post(passport.authenticate('local', {
-			res.send("Invalid Input"); 
+			failureRedirect: '/' 
 		}), function(req, res) {
+			res.statusCode = 200;
+			res.statusMessage = "Login Successful";
 			res.redirect('/profile');
 		});
 
@@ -83,8 +87,10 @@ let router = function(){
 			    }
 			    smtpTransport.sendMail(mailOptions, function(error, response){
 			        if(error){
-			            console.log(error);
-			            res.send('Invalid Mail');
+						console.log(error);
+						res.statusCode = 400;
+						res.statusMessage = "Invalid Mail";
+			            res.redirect('/');
 			        }else{
 
 			        	// adding user in inactive user table
@@ -99,6 +105,9 @@ let router = function(){
 							let inactiveTable = db.collection('inactiveUsers');
 							inactiveTable.insertOne(user, function(err, results){
 								client.close()
+
+								res.statusCode = 201;
+								res.statusMessage = "Varification mail sent";
 								res.send('Varify your mail');
 							});
 						});

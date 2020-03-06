@@ -16,6 +16,8 @@ let router = function() {
 
 	updateRouter.use((req, res, next) => {
 		if(!req.user){
+			res.statusCode = 401;
+			res.statusMessage = "Unauthorize access";
 			res.send('You are not logged in :(');
 		}
 		else
@@ -56,7 +58,9 @@ let router = function() {
 
 				await connection.close();
 
-				res.send("New List Added");
+				res.statusCode = 201;
+				res.statusMessage = "New List Added";
+				res.send(todoId);
 			})();
 		});
 
@@ -95,13 +99,16 @@ let router = function() {
 
 				await connection.close();
 
-				res.send("New Task Added");
+				res.statusCode = 201;
+				res.statusMessage = "New Task Added";
+				res.send(taskId);
+
 			})();
 		});
 
 	updateRouter.route('/addSubtask')
 		.post( (req, res) =>{
-			// requirements -> listId, taskId, newSubTaskName
+			// requirements -> listId, taskId, newSubtaskName
 			(async function(){
 
 				//pending -> check task in listId and authenticate user
@@ -122,7 +129,9 @@ let router = function() {
 
 				await connection.close();
 
-				res.send("New subtask Added");
+				res.statusCode = 201;
+				res.statusMessage = "New Subtask added";
+				res.send(newSubtaskName);
 			})();
 		});
 
@@ -145,7 +154,11 @@ let router = function() {
 				{"$set" : {"name" : newListName}});
 
 				await connection.close();
-
+				
+				res.statusCode = 200;
+				res.statusMessage = "List updated";
+     
+				res.send(listId);
 			})();
 		});
 
@@ -175,11 +188,16 @@ let router = function() {
 					});
 
 				 await connection.close();
+				 
+				 res.statusCode = 200;
+				 res.statusMessage = "Task updated";
+
+				 res.send(taskId);
 
 			})();
 		});
 
-	updateRouter.route('/udpateSubTask')
+	updateRouter.route('/udpateSubtask')
 		.post( (req, res) =>{
 			// requirements -> for searching => listId, taskid, subtaskName
 			// 				   new date => newSubtaskName, subtaskCompletedStatus
@@ -194,13 +212,18 @@ let router = function() {
 				let taskTable = db.collection(taskTableName);
 
 				await taskTable.updateOne( {"_id" : new ObjectId(req.body.taskId)}, 
-					{"$set" : {"listOfSubtask.$[elem].name" : newSubTaskName, "listOfSubtask.$[elem].completed" : subtaskCompletedStatus} },
+					{"$set" : {"listOfSubtask.$[elem].name" : newSubtaskName, "listOfSubtask.$[elem].completed" : subtaskCompletedStatus} },
 					{
 						multi : false,
 						arrayFilters : [ {"elem.name" : subtaskName} ]
 					});
 				
 				await connection.close();
+				
+				res.statusCode = 200;
+				res.statusMessage = "Subtask updated";
+
+				res.send(newSubtaskName);
 
 			});
 		});

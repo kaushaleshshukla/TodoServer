@@ -1,94 +1,266 @@
 
-const authRouter = require('./src/routes/authRoutes')();
-const varifyRouter = require('./src/routes/verifyMail')();
-const profileRouter = require('./src/routes/profileRoutes')();
-const updateRouter = require('./src/routes/updateRoutes')();
-const deleteRouter = require('./src/routes/deleteRoutes')();
-
-
 
 -------------------------------------------------------authRoutes--------------------------------------------------------
-hostnam/authRoutes/signUp
+hostname/auth/signUp
     method post 
         request -> name, username, password
-        response -> if(username is valid):
-                        "Verify Your mail 
+
+        response -> if(username already used)
+                        redirect('/')
+
+                    else if(username is not valid):
+                        redirect('/')
+
                     else
-                        "Invalid Mail"
+                        "Verify Your mail" 
+                        
+
+        statusCode -> if(username already used)
+                        400
+
+                      else if(username is not valid):
+                        400 
+
+                      else
+                        201
+
+        statusMessage -> if(username already used)
+                            "Username Already Present"
+
+                        else if(username is not valid):
+                            "Invalid Mail"
+
+                        else
+                            "Varification mail sent"
     
-hostnam/authRoutes/signIn
+hostname/auth/signIn
     method post
         request -> username, password
-        response -> if(username is valid)
-                        redirect to profile
+
+        response -> if(user is valid)
+                        redirect('/profile')
                     else
-                        "Invalid Input"
+                        redirect('/')
+        
+        statusCode -> if(user is valid)
+                        200
+                    
+        statusMessage -> if(user is valid)
+                            "Login Successful"
+                        
 
 
 -------------------------------------------------------profileRoutes-------------------------------------------------------
-/profile
-    for all routes 
-        if(user cookie is not valid)
-            "You are not logged In"
+for all routes 
+    if(user cookie is not valid)
+        response -> "You are not logged In"
 
+        statusCode -> 401;
+
+        statusMessage -> "Unauthorize access";
+
+hostname/profile
     method get
         request -> user cookie
         response -> user = {
-					name : userInfo.name,
-					username : req.user.username,
+					name
+					username
 					lists : [],
 					tasks : []
 				}
-    
-/profile/listId
-    method get
-        request -> user cookie
-        response -> if(list does not belong user)
-                        "Unauthorize access"
-                    else
-                        result = {
-					    	tasks : []
-					    }
 
-/profile/listId/taskId
+        statusCode -> 200
+
+	    statusMessage -> if(new user)
+                            "New user"
+                         else
+                            "Old user"
+    
+hostname/profile/listId
     method get
         request -> user cookie
-        response -> if(list does not belong user)
-                        "Unauthorize access"
-                    else
-                        result = {
-						    subtasks : []
-					    }    
+
+        response -> result = {
+                        tasks : []
+                    }
+
+        statusCode -> if(user is not valid)
+                        401
+                      else
+                        200
+
+        statusMessage -> if(user is not valid)
+                            "Unauthorize access"
+                         else
+                            "response sent"
+
+
+hostname/profile/listId/taskId
+    method get
+        request -> user cookie
+
+        response -> result = {
+                        subtasks : []
+                    }
+
+        statusCode -> if(user is not valid)
+                        401
+                      else
+                        200
+
+        statusMessage -> if(user is not valid)
+                            "Unauthorize access"
+                         else
+                            "response sent"   
 
 ---------------------------------------------------------updateRoutes------------------------------------------------------------------
 
-/update
+hostname/update
     for all routes 
         if(user cookie is not valid)
-            "You are not logged In"
+            response -> "You are not logged In"
 
-/update/addList
+            statusCode -> 401;
+
+            statusMessage -> "Unauthorize access";
+        
+
+hostname/update/addList
     method post
         request -> newListName
-        response ->"new List Added"
+        response -> listId
+        statusCode -> 201
+		statusMessage -> "New List Added"
 
 
-/update/addTask
+hostname/update/addTask
     method post 
         request -> listId, newTaskName
+                             
         response -> if(list does not belong user)
-                        "Unauthorize access"
+                        ""(null string)
                     else
-                        "New task added"
+                        taskId
+
+        statusCode -> if(list does not belong user)
+                        401
+                    else
+                        201
+
+	    statusMessage -> if(list does not belong user)
+                            "Unauthorize access"
+                        else
+                            "New task added"
+       
                     
-/update/addSubtask
+hostname/update/addSubtask
     method post
         request -> listId, taskId, newSubTaskName
+
         response -> if(list does not belong user)
-                        "Unauthorize access"
+                        "" (null string)
                     else if(task does not belong to list)
-                        "Unknown request"
+                        "" (null string)
                     else 
-                        "New Subtask Added"
+                        subtaskName
+
+        statusCode -> if(list does not belong user)
+                            401
+                      else if(task does not belong to list)
+                            400
+                      else 
+                            201
+        
+        statusMessage -> if(list does not belong user)
+                            "Unauthorize access"
+                        else if(task does not belong to list)
+                            "Bad request"
+                        else 
+                            "New Subtask Added"
+
+
+hostname/update/updateList
+    method post
+        request -> listId, newListName
+
+        response -> if(user not valid)
+                        "" (null string)
+                    else 
+                        listId
+
+        statusCode -> if(user not valid)
+                        401
+                      else 
+                        200
+
+        statusMessage -> if(user not valid)
+                            "Unauthorize access"
+                        else 
+                            "List updated"
+
+        
+
+
+hostname/update/updateTask
+    method post
+        request -> for searching => listId, taskId 
+				   new data => taskName, taskCompletedStatus, taskImportantStatus, taskNotes, taskDueDate
+        
+        response -> if(user not valid)
+                        ""(null string)
+                    else if(task does not belong to list)
+                        ""(null string)
+                    else
+                        taskId
+
+        
+        statusCode -> if(user not valid)
+                        401
+                    else if(task does not belong to list)
+                        400
+                    else
+                        200
+
+
+        statusMessage -> if(user not valid)
+                            "Unauthorize access"
+                        else if(task does not belong to list)
+                            "Bad request"
+                        else
+                            "Task updated"
+
+
+hostname/update/updateSubtask
+    method post
+        request ->  for searching => listId, taskid, subtaskName
+			        new date => newSubtaskName, subtaskCompletedStatus
+        
+        response -> if(user not valid)
+                        ""(null string)
+                    else if(task does not belong to list)
+                        ""(null string)
+                    else
+                        subtaskName
+
+        
+        statusCode -> if(user not valid)
+                        401
+                    else if(task does not belong to list)
+                        400
+                    else
+                        200
+
+
+        statusMessage -> if(user not valid)
+                            "Unauthorize access"
+                        else if(task does not belong to list)
+                            "Bad request"
+                        else
+                            "Task updated"
+
+--------------------------------------------------------------deleteRoutes----------------------------------------------------------------------
+
+
+
 
 
