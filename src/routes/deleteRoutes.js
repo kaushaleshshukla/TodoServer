@@ -99,13 +99,6 @@ let router = function(){
 						break;
 					}
                 }
-                
-                if(!validUser){
-                    if(userlist.sharedListIds[i]==listId){
-						validUser = true;
-						break;
-					}
-                }
 
                 if(!validUser){
                     await connection.close();

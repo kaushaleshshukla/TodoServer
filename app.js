@@ -4,11 +4,14 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
 
 const app = express();
 app.set('views', path.join(__dirname + '/src/views'));
 app.set('view engine', 'ejs');
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
@@ -20,11 +23,14 @@ const authRouter = require('./src/routes/authRoutes')();
 const varifyRouter = require('./src/routes/verifyMail')();
 const profileRouter = require('./src/routes/profileRoutes')();
 const updateRouter = require('./src/routes/updateRoutes')();
+const deleteRouter = require('./src/routes/deleteRoutes')();
 
 app.use('/auth', authRouter);
 app.use('/verifyMail', varifyRouter);
 app.use('/profile', profileRouter);
 app.use('/update', updateRouter);
+app.use('/delete', deleteRouter);
+
 
 app.get('/', (req, res) => {
 	res.render(
