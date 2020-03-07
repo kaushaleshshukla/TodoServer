@@ -131,7 +131,7 @@ let router = function() {
 
 				res.statusCode = 201;
 				res.statusMessage = "New Subtask added";
-				res.send(newSubtaskName);
+				res.send(req.body.newSubtaskName);
 			})();
 		});
 
@@ -151,14 +151,14 @@ let router = function() {
 
 				//updating list name
 				await todoTable.updateOne({"_id" : new ObjectId(req.body.listId)},
-				{"$set" : {"name" : newListName}});
+				{"$set" : {"name" : req.body.newListName}});
 
 				await connection.close();
 				
 				res.statusCode = 200;
 				res.statusMessage = "List updated";
      
-				res.send(listId);
+				res.send(req.body.listId);
 			})();
 		});
 
@@ -180,11 +180,11 @@ let router = function() {
 				//----------------------------------------Resolve dueDate issue
 				//updating task
 				await todoTable.updateOne({"_id" : new ObjectId(req.body.listId)},
-					{"$set" : {"listOfTask.$[elem].name" : taskName, "listOfTask.$[elem].completed" : taskCompletedStatus,
-					"listOfTask.$[elem].important" : taskImportantStatus, "listOfTask.$[elem].notes" : taskNotes, "listOfTask.$[elem].dueDate" : taskDueDate} },
+					{"$set" : {"listOfTask.$[elem].name" : req.body.taskName, "listOfTask.$[elem].completed" : req.body.taskCompletedStatus,
+					"listOfTask.$[elem].important" : req.body.taskImportantStatus, "listOfTask.$[elem].notes" : req.body.taskNotes, "listOfTask.$[elem].dueDate" : req.body.taskDueDate} },
 					{
 						multi : false,
-						arrayFilters : [ { "elem.id" : taskId} ]
+						arrayFilters : [ { "elem.id" : req.body.taskId} ]
 					});
 
 				 await connection.close();
@@ -192,7 +192,7 @@ let router = function() {
 				 res.statusCode = 200;
 				 res.statusMessage = "Task updated";
 
-				 res.send(taskId);
+				 res.send(req.body.taskId);
 
 			})();
 		});
@@ -212,10 +212,10 @@ let router = function() {
 				let taskTable = db.collection(taskTableName);
 
 				await taskTable.updateOne( {"_id" : new ObjectId(req.body.taskId)}, 
-					{"$set" : {"listOfSubtask.$[elem].name" : newSubtaskName, "listOfSubtask.$[elem].completed" : subtaskCompletedStatus} },
+					{"$set" : {"listOfSubtask.$[elem].name" : req.body.newSubtaskName, "listOfSubtask.$[elem].completed" : req.body.subtaskCompletedStatus} },
 					{
 						multi : false,
-						arrayFilters : [ {"elem.name" : subtaskName} ]
+						arrayFilters : [ {"elem.name" : req.body.subtaskName} ]
 					});
 				
 				await connection.close();
@@ -223,7 +223,7 @@ let router = function() {
 				res.statusCode = 200;
 				res.statusMessage = "Subtask updated";
 
-				res.send(newSubtaskName);
+				res.send(req.body.newSubtaskName);
 
 			});
 		});

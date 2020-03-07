@@ -44,7 +44,7 @@ let router = function(){
 				let validUser =false;
 
 				for(let i=0; i<userlist.personalListIds.length; i++){
-					if(userlist.personalListIds[i]==listId){
+					if(userlist.personalListIds[i]==req.body.listId){
 						validUser = true;
 						break;
 					}
@@ -61,17 +61,17 @@ let router = function(){
 
                     //deleting list
                     let listTable = db.collection(listTableName);
-                    await listTable.remove({"_id" : new ObjectId(listId)});
+                    await listTable.remove({"_id" : new ObjectId(req.body.listId)});
 
                     //removing listId from user personalList
                     await userTable.update({"username" : req.user.username},
-                        {"$pull" : {"personalListIds" : listId}});
+                        {"$pull" : {"personalListIds" : req.body.listId}});
 
                     //getting updated task list of user requested ToDo
                     userlist = await userTable.findOne({"username" : req.user.username});
                     
                     // updating last accessedId if it is deleted
-                    if(userlist.lastAccessedListId == listId){
+                    if(userlist.lastAccessedListId == req.body.listId){
                         if(userlist.personalListIds.length > 0)
                             lastAccessedListId = userlist.personalListIds[0];
                         else if(userlist.sharedListIds.length > 0)
@@ -114,7 +114,7 @@ let router = function(){
 				let validUser =false;
 
 				for(let i=0; i<userlist.personalListIds.length; i++){
-					if(userlist.personalListIds[i]==listId){
+					if(userlist.personalListIds[i]==req.body.listId){
 						validUser = true;
 						break;
 					}
@@ -122,7 +122,7 @@ let router = function(){
 
                 if(!validUser){
                     for(let i=0; i<userlist.sharedListIds.length; i++){
-                        if(userlist.sharedListIds[i]==listId){
+                        if(userlist.sharedListIds[i]==req.body.listId){
                             validUser = true;
                             break;
                         }
@@ -139,10 +139,10 @@ let router = function(){
                 //checking validity of taskId
                 let validTask = false;
                 let listTable = db.collection(listTableName);
-                let taskList = await listTable.findOne({ "_id" : new ObjectId(listId) });
+                let taskList = await listTable.findOne({ "_id" : new ObjectId(req.body.listId) });
 
                 for(let i=0; i<taskList.listOfTask.length; i++){
-                    if(taskList.listOfTask[i]==taskId){
+                    if(taskList.listOfTask[i]==req.body.taskId){
                         validTask = true;
                         break;
                     }
@@ -156,10 +156,10 @@ let router = function(){
                 }
 
                 let taskTable = db.collection(taskTableName);
-                await taskTable.remove({"_id" : new ObjectId(taskId)});
+                await taskTable.remove({"_id" : new ObjectId(req.body.taskId)});
                 
-                await listTable.update({ "_id": new ObjectId(listId)},
-                    {"$pull" : {"listOfTask" : { "id" : taskId } } });
+                await listTable.update({ "_id": new ObjectId(req.body.listId)},
+                    {"$pull" : {"listOfTask" : { "id" : req.body.taskId } } });
 
                 await connection.close();
 
@@ -191,7 +191,7 @@ let router = function(){
 				let validUser =false;
 
 				for(let i=0; i<userlist.personalListIds.length; i++){
-					if(userlist.personalListIds[i]==listId){
+					if(userlist.personalListIds[i]==req.body.listId){
 						validUser = true;
 						break;
 					}
@@ -199,7 +199,7 @@ let router = function(){
 
                 if(!validUser){
                     for(let i=0; i<userlist.sharedListIds.length; i++){
-                        if(userlist.sharedListIds[i]==listId){
+                        if(userlist.sharedListIds[i]==req.body.listId){
                             validUser = true;
                             break;
                         }
@@ -216,10 +216,10 @@ let router = function(){
                 //checking validity of taskId
                 let validTask = false;
                 let listTable = db.collection(listTableName);
-                let taskList = await listTable.findOne({ "_id" : new ObjectId(listId) });
+                let taskList = await listTable.findOne({ "_id" : new ObjectId(req.body.listId) });
 
                 for(let i=0; i<taskList.listOfTask.length; i++){
-                    if(taskList.listOfTask[i]==taskId){
+                    if(taskList.listOfTask[i]==req.body.taskId){
                         validTask = true;
                         break;
                     }
@@ -233,8 +233,8 @@ let router = function(){
                 }
 
                 let taskTable = db.collection(taskTableName);
-                await taskTable.update({"_id" : new ObjectId(taskId)},
-                    { "$pull" : {listOfSubtask : { "name" : subtaskName }}});
+                await taskTable.update({"_id" : new ObjectId(req.body.taskId)},
+                    { "$pull" : {listOfSubtask : { "name" : req.body.subtaskName }}});
 
                 await connection.close();
 

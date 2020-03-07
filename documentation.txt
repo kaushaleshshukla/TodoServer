@@ -161,7 +161,7 @@ hostname/update/addSubtask
                     else if(task does not belong to list)
                         "" (null string)
                     else 
-                        subtaskName
+                        newSubtaskName
 
         statusCode -> if(list does not belong user)
                             401

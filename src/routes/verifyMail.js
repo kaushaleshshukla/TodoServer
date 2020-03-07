@@ -3,7 +3,6 @@ let verifyRouter = express.Router();
 let MongoClient = require('mongodb').MongoClient;
 
 const func = function(){
-	console.log("Mail Varification");
 	verifyRouter.route('/')
 		.get( (req, res) => {
 			console.log("----------"+req.param('id'));
