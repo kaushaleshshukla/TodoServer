@@ -11,7 +11,12 @@ const app = express();
 app.set('views', path.join(__dirname + '/src/views'));
 app.set('view engine', 'ejs');
 
-app.use(cors());
+let corsOptions = {
+	origin : 'http://localhost:3000',
+	credentials : true
+};
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
