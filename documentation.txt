@@ -261,6 +261,91 @@ hostname/update/updateSubtask
 --------------------------------------------------------------deleteRoutes----------------------------------------------------------------------
 
 
+hostname/delete
+    for all routes 
+        if(user cookie is not valid)
+            response -> "You are not logged In"
+
+            statusCode -> 401;
+
+            statusMessage -> "Unauthorize access";
+
+hostname/delete/deleteList
+     method post
+        request -> listId
+        
+        response -> if(user not valid)
+                        "Unauthorize access"
+                    else
+                        "List deleted"
+
+        
+        statusCode -> if(user not valid)
+                        401
+                      else
+                        200
+
+
+        statusMessage -> if(user not valid)
+                            "Unauthorize access"
+                        else
+                            "List deleted"
+
+
+hostname/delete/deleteTask
+     method post
+        request -> listId, taskId
+        
+        response -> if(user not valid)
+                        "Unauthorize access"
+                    else if(task is not valid)
+                        "Task does not belong to List"
+                    else
+                        "Task deleted"
+
+        
+        statusCode -> if(user not valid)
+                        401
+                    else if(task is not valid)
+                        400
+                      else
+                        200
+
+
+        statusMessage -> if(user not valid)
+                            "Unauthorize access"
+                        else if(task is not valid)
+                            "Bad request"
+                        else
+                            "Task deleted"
+
+
+hostname/delete/deleteSubtask
+     method post
+        request -> listId, taskId, subtaskName
+        
+        response -> if(user not valid)
+                        "Unauthorize access"
+                    else if(task is not valid)
+                        "Task does not belong to List"
+                    else
+                        "subtask deleted"
+
+        
+        statusCode -> if(user not valid)
+                        401
+                    else if(task is not valid)
+                        400
+                      else
+                        200
+
+
+        statusMessage -> if(user not valid)
+                            "Unauthorize access"
+                        else if(task is not valid)
+                            "Bad request"
+                        else
+                            "subtask deleted"
 
 
 
