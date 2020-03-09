@@ -197,7 +197,7 @@ let router = function() {
 			})();
 		});
 
-	updateRouter.route('/udpateSubtask')
+	updateRouter.route('/updateSubtask')
 		.post( (req, res) =>{
 			// requirements -> for searching => listId, taskid, subtaskName
 			// 				   new date => newSubtaskName, subtaskCompletedStatus
