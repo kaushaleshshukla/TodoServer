@@ -225,7 +225,7 @@ let router = function() {
 
 				res.send(req.body.newSubtaskName);
 
-			});
+			})();
 		});
 
 	return updateRouter;

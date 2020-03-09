@@ -29,12 +29,14 @@ const varifyRouter = require('./src/routes/verifyMail')();
 const profileRouter = require('./src/routes/profileRoutes')();
 const updateRouter = require('./src/routes/updateRoutes')();
 const deleteRouter = require('./src/routes/deleteRoutes')();
+const shareRouter = require('./src/routes/shareRoutes')();
 
 app.use('/auth', authRouter);
 app.use('/verifyMail', varifyRouter);
 app.use('/profile', profileRouter);
 app.use('/update', updateRouter);
 app.use('/delete', deleteRouter);
+app.use('/share', shareRouter);
 
 
 app.get('/', (req, res) => {
