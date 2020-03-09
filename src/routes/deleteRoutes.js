@@ -219,7 +219,7 @@ let router = function(){
                 let taskList = await listTable.findOne({ "_id" : new ObjectId(req.body.listId) });
 
                 for(let i=0; i<taskList.listOfTask.length; i++){
-                    if(taskList.listOfTask[i]==req.body.taskId){
+                    if(taskList.listOfTask[i].id==req.body.taskId){
                         validTask = true;
                         break;
                     }

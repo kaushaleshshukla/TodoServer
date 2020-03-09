@@ -94,7 +94,7 @@ let router = function(){
 					}
 
 					for(let i=0; i<taskList.listOfTask.length; i++)
-						user.tasks.push(taskList.listOfTask[i]);
+						user.tasks.push(taskList.listOfTask[i].id);
 					
 
 					await connection.close();
