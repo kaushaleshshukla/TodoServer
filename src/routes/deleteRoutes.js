@@ -73,11 +73,14 @@ let router = function(){
                     // updating last accessedId if it is deleted
                     if(userlist.lastAccessedListId == req.body.listId){
                         if(userlist.personalListIds.length > 0)
-                            lastAccessedListId = userlist.personalListIds[0];
+                            await userTable.updateOne({username : req.user.username},
+                                {"$set" : {"lastAccessedListId" : userlist.personalListIds[0]}});
                         else if(userlist.sharedListIds.length > 0)
-                            lastAccessedListId = userlist.sharedListIds[0];
+                            await userTable.updateOne({username : req.user.username},
+                                {"$set" : {"lastAccessedListId" : userlist.sharedListIds[0]}});
                         else
-                            lastAccessedListId = "";
+                            await userTable.updateOne({username : req.user.username},
+                                {"$set" : {"lastAccessedListId" : ""}});
                     }
 
                                         
