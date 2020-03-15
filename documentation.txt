@@ -48,7 +48,17 @@ hostname/auth/signIn
                             "Login Successful"
                         
 
+hostname/auth/signOut
+    method get
+        request -> user cookie
 
+        response -> "User Logged Out"
+
+        statusCode -> 200
+
+        statusMessage -> "Session deleted"
+
+        
 -------------------------------------------------------profileRoutes-------------------------------------------------------
 for all routes 
     if(user cookie is not valid)

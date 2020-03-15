@@ -60,7 +60,14 @@ let router = function(){
 			res.statusMessage = "Login Successful";
 			res.send('redirect to /profile');
 		});
-
+	
+	authRouter.route('/signOut')
+		.get( (req, res) =>{
+			req.session.destroy();
+			res.statusCode = 200;
+			res.statusMessage = "Session deleted";
+			res.send("User Logged Out");
+		});
 	//sending mail for verification of username
 	authRouter.route('/sendMail')
 		//pending -> authenticate this route
