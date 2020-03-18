@@ -39,13 +39,10 @@ app.use('/delete', deleteRouter);
 app.use('/share', shareRouter);
 
 
-app.get('/', (req, res) => {
-	res.render(
-		'index',
-		{
-
-		}
-	);
+app.get('*', (req, res) => {
+	res.statusCode = 404;
+	res.statusMessage = "Page Not Found";
+	res.send("Page not found");
 });
 
 app.listen(3000, () => {

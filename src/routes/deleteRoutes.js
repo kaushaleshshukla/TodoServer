@@ -247,6 +247,16 @@ let router = function(){
                 
             })();
         });
+
+    // Page not found
+	deleteRouter.route('/*')
+        .all( (req, res) => {
+            res.statusCode = 404;
+            res.statusMessage = "Page Not Found";
+            res.send("Page not found");
+        });
+
+    
     return deleteRouter;
 }
 
