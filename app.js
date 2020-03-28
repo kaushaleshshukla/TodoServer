@@ -16,7 +16,7 @@ let corsOptions = {
 	credentials : true
 };
 app.use(cors(corsOptions));
-
+app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
@@ -31,12 +31,12 @@ const updateRouter = require('./src/routes/updateRoutes')();
 const deleteRouter = require('./src/routes/deleteRoutes')();
 const shareRouter = require('./src/routes/shareRoutes')();
 
-app.use('/auth', authRouter);
-app.use('/verifyMail', varifyRouter);
-app.use('/profile', profileRouter);
-app.use('/update', updateRouter);
-app.use('/delete', deleteRouter);
-app.use('/share', shareRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/verifyMail', varifyRouter);
+app.use('/api/profile', profileRouter);
+app.use('/api/update', updateRouter);
+app.use('/api/delete', deleteRouter);
+app.use('/api/share', shareRouter);
 
 
 app.get('*', (req, res) => {

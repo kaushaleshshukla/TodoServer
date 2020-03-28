@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    <title>To-do</title>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="form">
+            <div class="welcome">
+                <div class="logo-img">
+                    <img src="./todo-icon.png" height="100%" alt="person">
+                </div>
+                <h1>Welcome,</h1>
+                <p>Lets plan your day</p>
+            </div>
+            <div class="form-container">
+                <form onsubmit="formValidator(event)">
+                    <label for="email">Email</label>
+                    <br />
+                    <input id="email" name="email" type="email" required />
+                    <br />
+                    <label for="name">Name</label>
+                    <br />
+                    <input id="name" name="name" type="text" required />
+                    <br />
+                    <label for="password">Password</label>
+                    <br />
+                    <input id="password" name="password" type="password" required />
+                    <br />
+                    <label for="confirmPassword">Confirm password</label>
+                    <br />
+                    <input id="confirmPassword" name="confirmPassword" type="password" required />
+                    <br />
+                    <input type="submit" value="SignUp" />
+                </form>
+            </div>
+            <div class="message">
+                Already have an account?, <a href="../">Login</a>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        let formValidator = (event) => {
+            event.preventDefault();
+            let form = event.target;
+            let name = form.name.value && form.name.value.trim();
+            let email = form.email.value && form.email.value.trim();
+            let password = form.password.value && form.password.value.trim();
+            let confirmPassword = form.confirmPassword.value && form.confirmPassword.value.trim();
+            console.log(name, email, password, confirmPassword);
+
+            if (!name) {
+                alert('name not entered');
+            } else if (!email) {
+                alert('please enter your valid email');
+            } else if (!password) {
+                alert('please enter a secure password')
+            } else if (!confirmPassword) {
+                alert('confirm above password');
+            } else if (password !== confirmPassword) {
+                alert('password do not match');
+            } else if (password.length < 6) {
+                alert('Please choose a secure password of minimum 6 Characters');
+            } else {
+                let body = {
+                    username: email,
+                    password,
+                    name
+                }
+                let postBody = Object.keys(body)
+                    .map(key => {
+                        return encodeURIComponent(key) + '=' + encodeURIComponent(body[key])
+                    })
+                    .join('&');
+                console.log(postBody);
+                fetch('http://40.121.182.221:3000/api/auth/signUp', {
+                    method: 'post',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: postBody
+                }).then(res => {
+                    console.log(res);
+                    if (res.status === 400) {
+                        alert(res.statusText);
+                    } else if (res.status === 201) {
+                        alert('We have sent a verification link to your email.');
+                    }
+
+                }).catch(er => {
+                    console.log('error in signin', er);
+                })
+            }
+        }
+
+    </script>
+</body>
+
+</html>

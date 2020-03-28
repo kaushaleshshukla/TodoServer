@@ -13,7 +13,7 @@ let authTableName = 'auths';
 let dbName = 'ToDo';
 
 let router = function(){
-
+    // router.route(/getLink)
     return router;
 }
 

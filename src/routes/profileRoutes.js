@@ -154,17 +154,31 @@ let router = function(){
 
 				else{
 					//getting all task of a ToDo
+					//pending -> delete list from shared List if its not available in listTable
+
 					let todoTable = db.collection(listTableName);
 					let todoList = await todoTable.findOne({"_id" : new ObjectId(req.params.id)});
-					result.tasks = todoList.listOfTask;
 
-					let userTable = db.collection(userTableName);
-					await userTable.updateOne({username: req.user.username}, {$set : { lastAccessedListId : req.params.id}}); 
-					await connection.close();
+					if(!todoList){
+						await userTable.update({"username" : req.user.username},
+							{"$pull" : {"sharedListIds" : req.body.listId}});
+						await connection.close();
+						res.statusCode = 400;
+						res.statusMessage = "List is deleted by owner";
+						res.send(result);
+					}
 
-					res.statusCode = 200;
-					res.statusMessage = "response sent";
-					res.send(result);
+					else{	
+						result.tasks = todoList.listOfTask;
+
+						let userTable = db.collection(userTableName);
+						await userTable.updateOne({username: req.user.username}, {$set : { lastAccessedListId : req.params.id}}); 
+						await connection.close();
+
+						res.statusCode = 200;
+						res.statusMessage = "response sent";
+						res.send(result);
+					}
 					
 				}
 			})();

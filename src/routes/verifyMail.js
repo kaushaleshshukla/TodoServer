@@ -33,7 +33,7 @@ const func = function(){
 					//deleting mapped verification link from database
 					await inactiveTable.deleteOne({hash : Number.parseInt(req.param('id'))});
 
-					res.send("Varified");
+					res.send("Verified");
 				}
 				connection.close();
 			})();

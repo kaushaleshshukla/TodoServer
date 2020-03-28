@@ -47,7 +47,7 @@ let router = function(){
 				if(authInsertRes && authInsertRes.insertedCount){
 					console.log("redirecting to send mail");
 					connection.close();
-					res.redirect(`/auth/sendMail?user=${req.body.username}`);
+					res.redirect(`/api/auth/sendMail?user=${req.body.username}`);
 				};
 		})();
 	});

@@ -1,4 +1,14 @@
 
+for all invalid request
+
+    response = "Page not found"
+
+    statusCode = 404;
+    
+    statusMessage = "Page Not Found";
+    
+
+
 -------------------------------------------------------authRoutes--------------------------------------------------------
 hostname/auth/signUp
     method post 
@@ -95,11 +105,15 @@ hostname/profile/listId
 
         statusCode -> if(user is not valid)
                         401
+                      else if(list deleted by owner)
+                        400
                       else
                         200
 
         statusMessage -> if(user is not valid)
                             "Unauthorize access"
+                         else if(list deleted by owner)
+                            "List is deleted by owner"
                          else
                             "response sent"
 
